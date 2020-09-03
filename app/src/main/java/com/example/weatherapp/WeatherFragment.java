@@ -126,6 +126,10 @@ public class WeatherFragment extends Fragment {
         weatherIcon.setText(icon);
     }
 
+    public void changeCity(String city) {
+        updateWeatherData(city);
+    }
+
 
     public TextView getWeatherIcon() {
         return weatherIcon;
