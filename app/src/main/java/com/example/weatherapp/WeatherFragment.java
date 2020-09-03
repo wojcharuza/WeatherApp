@@ -11,7 +11,12 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 
 public class WeatherFragment extends Fragment {
@@ -71,7 +76,28 @@ public class WeatherFragment extends Fragment {
     }
 
     private void renderWeather(JSONObject jsonObject) {
-        
+        try {
+            cityField.setText(jsonObject.getString("name").toUpperCase(Locale.ENGLISH) +
+                    ", " + jsonObject.getJSONObject("sys").getString("country"));
+            JSONObject details = jsonObject.getJSONArray("weather").getJSONObject(0);
+            JSONObject main = jsonObject.getJSONObject("main");
+            detailsField.setText(details.getString("description").toUpperCase(Locale.ENGLISH) +
+                    "\n" + "Humidity: " + main.getString("humidity") + "%" +
+                    "\n" + "Pressure: " + main.getString("pressure" + "hPa"));
+
+            currentTemperatureField.setText(String.format("%.2f", main.getDouble("temp")) + " ℃");
+            DateFormat df = DateFormat.getDateInstance();
+            String updatedOn = df.format(new Date(jsonObject.getLong("dt") * 1000));
+            updatedField.setText("Last update: " + updatedOn);
+            setWeatherIcon(details.getInt("id"), 
+                    jsonObject.getJSONObject("sys").getLong("sunrise") * 1000,
+                    jsonObject.getJSONObject("sys").getLong("sunset") * 1000);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setWeatherIcon(int id, long l, long l1) {
     }
 
 
